@@ -7,7 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C96A800C218D1D5400F690B4 /* cpu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C96A800A218D1D5400F690B4 /* cpu.cpp */; };
 		C9DAB1F82155D52100E34F8C /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9DAB1F72155D52100E34F8C /* main.cpp */; };
+		C9DAB2002155D60500E34F8C /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9DAB1FF2155D60500E34F8C /* SDL2.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -23,8 +25,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C96A800A218D1D5400F690B4 /* cpu.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = cpu.cpp; path = "gameboy emulator/cpu.cpp"; sourceTree = "<group>"; };
+		C96A800B218D1D5400F690B4 /* cpu.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = cpu.hpp; path = "gameboy emulator/cpu.hpp"; sourceTree = "<group>"; };
 		C9DAB1F42155D52100E34F8C /* gameboy emulator */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "gameboy emulator"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9DAB1F72155D52100E34F8C /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		C9DAB1FF2155D60500E34F8C /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../../Library/Frameworks/SDL2.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,6 +37,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9DAB2002155D60500E34F8C /* SDL2.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -41,8 +47,11 @@
 		C9DAB1EB2155D52100E34F8C = {
 			isa = PBXGroup;
 			children = (
+				C96A800A218D1D5400F690B4 /* cpu.cpp */,
+				C96A800B218D1D5400F690B4 /* cpu.hpp */,
 				C9DAB1F62155D52100E34F8C /* gameboy emulator */,
 				C9DAB1F52155D52100E34F8C /* Products */,
+				C9DAB1FE2155D60400E34F8C /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -60,6 +69,14 @@
 				C9DAB1F72155D52100E34F8C /* main.cpp */,
 			);
 			path = "gameboy emulator";
+			sourceTree = "<group>";
+		};
+		C9DAB1FE2155D60400E34F8C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C9DAB1FF2155D60500E34F8C /* SDL2.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -118,6 +135,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C96A800C218D1D5400F690B4 /* cpu.cpp in Sources */,
 				C9DAB1F82155D52100E34F8C /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -240,6 +258,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_OPTIMIZATION_LEVEL = 2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -248,6 +271,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_OPTIMIZATION_LEVEL = 2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
