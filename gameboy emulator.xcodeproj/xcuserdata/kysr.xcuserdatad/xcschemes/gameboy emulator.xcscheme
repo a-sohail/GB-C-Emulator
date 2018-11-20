@@ -65,11 +65,11 @@
       <CommandLineArguments>
          <CommandLineArgument
             argument = "Tetris-USA.gb"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "02-interrupts.gb"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "cpu_instrs.gb"

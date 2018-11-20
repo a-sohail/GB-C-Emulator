@@ -47,6 +47,8 @@ Register DE;
 Register HL;
 Register SP;
 WORD PC;
+WORD ifRegister;
+WORD ieRegister;
 
 // Interrupts
 bool IME = false;
@@ -144,6 +146,11 @@ public:
                 controls[1] &= 0x0B;
                 break;
             default: break;
+        }
+        
+        // Joypad Interrupt occurrs if key is pressed and column bit is enabled
+        if((column & 0x10 && controls[1] != 0x0F) || (column & 0x20 && controls[0] != 0x0F)){
+            ifRegister |= 0x10;
         }
     }
     
@@ -254,6 +261,74 @@ public:
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+class Timer{
+    
+public:
+    
+    BYTE divider = 0;
+    BYTE counter = 0;
+    BYTE modulo = 0;
+    BYTE control = 0;
+    
+    int controlClock = 1024;
+    int dividerClock = 0;
+    
+    bool isClockEnabled = true;
+    
+    void addToClock(int clockCycles){
+        
+        // handle dividers
+        dividerClock += clockCycles;
+        if(dividerClock >= 256){
+            dividerClock %= 256;
+            divider++;
+        }
+        
+        if(isClockEnabled){
+            
+            controlClock -= clockCycles;
+            
+            if(controlClock <= 0){
+                
+                setControlRate();
+                
+                if(control == 0xFF){
+                    counter = modulo;
+                    // Request Timer Interrupt by setting bit 2 in IF Register
+                    ifRegister |= 0x4;
+                }
+                else{
+                    counter++;
+                }
+            }
+        }
+    }
+    
+    void setControlRate(){
+        switch(control & 0x3){
+            case 0:
+                controlClock = CLOCKSPEED / 4096;
+                break;
+            case 1:
+                controlClock = CLOCKSPEED / 262144;
+                break;
+            case 2:
+                controlClock = CLOCKSPEED / 65536;
+                break;
+            case 3:
+                controlClock = CLOCKSPEED / 16384;
+                break;
+            default:
+                break;
+        }
+        isClockEnabled = (control & 0x4);
+    }
+    
+};
+Timer timer;
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class MMU{
     
     // PPU Registers and Tile Set
@@ -279,6 +354,8 @@ public:
     BYTE palette[4][4];
     BYTE obj0Palette[4][4];
     BYTE obj1Palette[4][4];
+    
+    BYTE lcdStatRegister = 0;
     
 private:
     BYTE memory[MAX_MEMORY];
@@ -384,12 +461,27 @@ public:
         else if (address == 0xFF00){
             return joypad.readByte();
         }
+        else if(address == 0xFF04){
+            return timer.divider;
+        }
+        else if(address == 0xFF05){
+            return timer.counter;
+        }
+        else if(address == 0xFF06){
+            return timer.modulo;
+        }
+        else if(address == 0xFF07){
+            return timer.control;
+        }
         else if(address == 0xFF40){
             return (switchBG  ? 0x01 : 0x00) |
                    (switchOBJ ? 0x02 : 0x00) |
                    (bgMap     ? 0x08 : 0x00) |
                    (bgTile    ? 0x10 : 0x00) |
                    (switchLCD ? 0x80 : 0x00);
+        }
+        else if(address == 0xFF41){
+            return lcdStatRegister;
         }
         else if(address == 0xFF42){
             return scrollY;
@@ -399,6 +491,12 @@ public:
         }
         else if(address == 0xFF44){
             return line;
+        }
+        else if(address == 0xFF0F){
+            return ifRegister;
+        }
+        else if(address == 0xFFFF){
+            return ieRegister;
         }
         
         return memory[address];
@@ -435,23 +533,24 @@ public:
             return;
         }
         else if(address == 0xFF04){
-            memory[address] = 0;
+            timer.divider = 0;
             return;
         }
         else if(address == 0xFF05){
-            memory[address] = val;
+            timer.counter = val;
             return;
         }
         else if(address == 0xFF06){
-            memory[address] = val;
+            timer.modulo = val;
             return;
         }
         else if(address == 0xFF07){
-            memory[address] = val;
+            timer.control = val;
+            timer.setControlRate();
             return;
         }
         else if (address == 0xFF0F){
-            memory[address] = 0xE0 | val;
+            ifRegister = 0xE0 | val;
             return;
         }
         else if(address == 0xFF40){
@@ -460,6 +559,10 @@ public:
             bgMap     = (val & 0x08) ? 1 : 0;
             bgTile    = (val & 0x10) ? 1 : 0;
             switchLCD = (val & 0x80) ? 1 : 0;
+            return;
+        }
+        else if(address == 0xFF41){
+            lcdStatRegister = (val & 0x78) | (memory[address] & 0x07);
             return;
         }
         else if(address == 0xFF42){
@@ -487,6 +590,10 @@ public:
         }
         else if(address == 0xFF50){
             inBIOS = false;
+            return;
+        }
+        else if(address == 0xFFFF){
+            ieRegister = val;
             return;
         }
         
@@ -519,74 +626,6 @@ public:
 };
 
 MMU mmu;
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-class Timer{
-    
-public:
-    
-    BYTE control = mmu.readByte(0xFF07);
-    
-    int controlClock = 1024;
-    int dividerClock = 0;
-    
-    bool isClockEnabled = true;
-    
-    void addToClock(int clockCycles){
-        
-        // handle dividers
-        dividerClock += clockCycles;
-        if(dividerClock >= 256){
-            dividerClock %= 256;
-            mmu.writeByte(0xFF04, mmu.readByte(0xFF04) + 1);
-        }
-        
-        if(isClockEnabled){
-            if(control != mmu.readByte(0xFF07)){
-                control = mmu.readByte(0xFF07);
-                setControlRate();
-            }
-            controlClock -= clockCycles;
-            
-            if(controlClock <= 0){
-                
-                setControlRate();
-                
-                if(mmu.readByte(0xFF07) == 0xFF){
-                    mmu.writeByte(0xFF05, mmu.readByte(0xFF06));
-                    // handle interrupt
-                    // @TODO3
-                }
-                else{
-                    mmu.writeByte(0xFF05, mmu.readByte(0xFF05) + 1);
-                }
-            }
-        }
-    }
-    
-    void setControlRate(){
-        switch(mmu.readByte(0xFF07) & 0x3){
-            case 0:
-                controlClock = CLOCKSPEED / 4096;
-                break;
-            case 1:
-                controlClock = CLOCKSPEED / 262144;
-                break;
-            case 2:
-                controlClock = CLOCKSPEED / 65536;
-                break;
-            case 3:
-                controlClock = CLOCKSPEED / 16384;
-                break;
-            default:
-                break;
-        }
-        isClockEnabled = (mmu.readByte(0xFF07) & 0x4);
-    }
-    
-};
-Timer timer;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1213,10 +1252,12 @@ class CPU{
     // NOP ignored because we'll handle clock cycle updates in the switch statement
     
     void CPU_HALT(){
+        if(!IME && (ifRegister & ieRegister & 0x1F)){
+            return;
+        }
+        PC--;
         halt = true;
     }
-    
-    // Stop ignored because reasons
     
     void CPU_DI(){
         IME = false;
@@ -1281,7 +1322,7 @@ class CPU{
         SP.reg = 0;
         PC = 0;
         clock = 0;
-        mmu.writeByte(0xFF0F, 0xE0);
+        ifRegister = 0xE0;
     }
     
     int executeExtendedOpcode(const BYTE& opcode){
@@ -1768,8 +1809,8 @@ class CPU{
             case 0x3F: CPU_CCF(); return 4;
             case 0x37: CPU_SCF(); return 4;
             case 0x00: return 4;
-            case 0x76: halt = true; PC++; return 4; // halt return timing should be N*4
-            case 0x10: return 4; // stop instruction?
+            case 0x76: CPU_HALT(); if(!halt){return 4 + executeOpcode(PC);} return 4;
+            case 0x10: return 4;
             case 0xF3: CPU_DI(); return 4;
             case 0xFB: CPU_EI(); return 4;
                 // Jump Commands
@@ -1818,50 +1859,46 @@ public:
     }
     
     void handleInterrupts(){
+        
+        // Check what interrupts are enabled by using the IE and IF registers respectively
+        BYTE interrupts =  ifRegister & ieRegister & 0x1F;
+        
+        if(halt && interrupts != 0){
+            PC++;
+            halt = false;
+        }
+        
         if(!IME){
             return;
         }
         
-        // Check what interrupts are enabled by using the IE and IF registers respectively
-        BYTE ifRegister = mmu.readByte(0xFF0F);
-        BYTE ieRegister = mmu.readByte(0xFFFF);
-        BYTE interrupts =  ifRegister & ieRegister;
-        
         // V-blank interrupt
-        //std::cout << std::hex << (int) ifRegister << std::endl;
         if(interrupts & 0x1){
             IME = false;
-            mmu.writeByte(0xFF0F, ifRegister & 0xFE);
+            ifRegister &= 0xFE;
             CPU_RST(0x0040);
         }
-//        // LCD STAT
-//        else if(interrupts & 0x2){
-//            IME = false;
-//            mmu.writeByte(0xFF0F, ieRegister & 0xFD);
-//            CPU_RST(0x0048);
-//        }
-//        // Timer
-//        else if(interrupts & 0x4){
-//            IME = false;
-//            mmu.writeByte(0xFF0F, ieRegister & 0xFB);
-//            CPU_RST(0x0050);
-//        }
-//        // Serial
-//        else if(interrupts & 0x8){
-//            IME = false;
-//            mmu.writeByte(0xFF0F, ieRegister & 0xF7);
-//            CPU_RST(0x0058);
-//        }
-//        // Joypad
-//        else if(interrupts & 0x10){
-//            IME = false;
-//            mmu.writeByte(0xFF0F, ieRegister & 0xEF);
-//            CPU_RST(0x0060);
-//        }
+        // LCD STAT
+        else if(interrupts & 0x2){
+            IME = false;
+            ifRegister &= 0xFD;
+            CPU_RST(0x0048);
+        }
+        // Timer
+        else if(interrupts & 0x4){
+            IME = false;
+            ifRegister &= 0xFB;
+            CPU_RST(0x0050);
+        }
+        // Joypad
+        else if(interrupts & 0x10){
+            IME = false;
+            ifRegister &= 0xEF;
+            CPU_RST(0x0060);
+        }
     }
     
     int step(){
-        handleInterrupts();
         return executeOpcode(mmu.readByte(PC++));
     }
     
@@ -2034,6 +2071,68 @@ class PPU{
         }
     }
     
+    void setLCDStatus(){
+        if(!mmu.switchLCD){
+            clock = 1824;
+            mmu.line = 0;
+            mmu.lcdStatRegister &= 0xFC;
+            mmu.lcdStatRegister |= 0x01;
+            return;
+        }
+        
+        BYTE currentMode = mmu.lcdStatRegister & 0x3;
+        
+        BYTE lcdMode = 0;
+        bool shouldInterrupt = false;
+        
+        // V-Blank
+        if(mmu.line >= 144){
+            lcdMode = 1;
+            mmu.lcdStatRegister &= 0xFC;
+            mmu.lcdStatRegister |= 0x01;
+            shouldInterrupt = mmu.lcdStatRegister & 0x10;
+        }
+        else{
+            
+            int mode2Bounds = (456 - 80);
+            int mode3Bounds = (mode2Bounds - 172) * 4;
+            mode2Bounds *= 4;
+            
+            if(clock >= mode2Bounds){
+                lcdMode = 2;
+                mmu.lcdStatRegister &= 0xFC;
+                mmu.lcdStatRegister |= 0x01;
+                shouldInterrupt = mmu.lcdStatRegister & 0x20;
+            }
+            else if(clock >= mode3Bounds){
+                lcdMode = 3;
+                mmu.lcdStatRegister |= 0x03;
+            }
+            else{
+                lcdMode = 0;
+                mmu.lcdStatRegister &= 0xFC;
+                shouldInterrupt = mmu.lcdStatRegister & 0x08;
+            }
+            
+        }
+        
+        if(shouldInterrupt && (lcdMode != currentMode)){
+            ifRegister |= 0x2;
+        }
+        
+        // LY = LYC
+        if(mmu.line == mmu.readByte(0xFF45)){
+            mmu.lcdStatRegister |= 0x4;
+            if(mmu.lcdStatRegister & 0x40){
+                ifRegister |= 0x2;
+            }
+        }
+        else{
+            mmu.lcdStatRegister &= 0xFB;
+        }
+        
+    }
+    
 public:
     
     void reset(){
@@ -2043,10 +2142,18 @@ public:
     }
     
     void step(){
+        
+        setLCDStatus();
+        
+        if(!mmu.switchLCD){
+            return;
+        }
+        
         // Screen cycles through (OAM -> VRAM -> HBLANK) * 144 -> VBLANK
         switch (mode){
                 // OAM
             case 2:
+                
                 if (clock >= 320){
                     clock %= 320;
                     mode = 3;
@@ -2063,16 +2170,19 @@ public:
                 
                 // HBLANK
             case 0:
+                
                 if(clock >= 816){
-                    if(mmu.switchLCD)
-                        renderScan();
+
+                    renderScan();
+
                     clock %= 816;
                     mmu.line++;
+                    
                     //std::cout << "Line: " << std::dec << mmu.line << std::endl;
                     
                     if(mmu.line == 144){
                         mode = 1;
-                        mmu.writeByte(0xFF0F, (mmu.readByte(0xFF0F) | 0x1));
+                        ifRegister |= 0x1;
                     }
                     else{
                         mode = 2;
@@ -2085,7 +2195,7 @@ public:
                 if(clock >= 1824){
                     clock %= 1824;
                     mmu.line++;
-                    //std::cout << "Line: " << std::dec << mmu.line << std::endl;
+                    
                     if(mmu.line == 154){
                         renderImage();
                         mode = 2;
@@ -2717,14 +2827,18 @@ int main(int argc, char *argv[]){
         
         auto startTime = std::chrono::system_clock::now();
         while (frameCycles < maxCycles){
+            //printState();
+            //printLog();
             clockCycles = cpu.step();
             frameCycles += clockCycles;
             cpu.addToClock(clockCycles);
             ppu.addToClock(clockCycles);
             timer.addToClock(clockCycles);
             ppu.step();
+            cpu.handleInterrupts();
         }
-        
+        if(PC == 0xc2f9)
+            std::exit(0);
         frameCycles %= maxCycles;
         auto endTime = std::chrono::system_clock::now();
         

@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "gameboy emulator/main.cpp"
-            timestampString = "564012858.365811"
+            timestampString = "564365756.082508"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2073"
-            endingLineNumber = "2073"
+            startingLineNumber = "2195"
+            endingLineNumber = "2195"
             landmarkName = "step()"
             landmarkType = "7">
          </BreakpointContent>
@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "gameboy emulator/main.cpp"
-            timestampString = "564012858.366726"
+            timestampString = "564365756.083081"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2074"
-            endingLineNumber = "2074"
+            startingLineNumber = "2196"
+            endingLineNumber = "2196"
             landmarkName = "step()"
             landmarkType = "7">
          </BreakpointContent>
@@ -42,27 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "gameboy emulator/main.cpp"
-            timestampString = "564012858.3670239"
+            timestampString = "564365756.083463"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "509"
-            endingLineNumber = "509"
-            landmarkName = "readROM(const std::string&amp; rom)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "gameboy emulator/main.cpp"
-            timestampString = "564012858.367308"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2699"
-            endingLineNumber = "2699"
+            startingLineNumber = "2821"
+            endingLineNumber = "2821"
             landmarkName = "main(int argc, char *argv[])"
             landmarkType = "9">
          </BreakpointContent>
@@ -74,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "gameboy emulator/main.cpp"
-            timestampString = "564012858.367606"
+            timestampString = "564365756.083851"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2690"
-            endingLineNumber = "2690"
+            startingLineNumber = "2812"
+            endingLineNumber = "2812"
             landmarkName = "main(int argc, char *argv[])"
             landmarkType = "9">
          </BreakpointContent>
@@ -90,11 +74,27 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "gameboy emulator/main.cpp"
-            timestampString = "564012858.367875"
+            timestampString = "564365756.0842119"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2091"
-            endingLineNumber = "2091"
+            startingLineNumber = "2213"
+            endingLineNumber = "2213"
+            landmarkName = "quit()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "gameboy emulator/main.cpp"
+            timestampString = "564365756.084568"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2192"
+            endingLineNumber = "2192"
             landmarkName = "step()"
             landmarkType = "7">
          </BreakpointContent>
@@ -106,11 +106,43 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "gameboy emulator/main.cpp"
-            timestampString = "564012858.3681411"
+            timestampString = "564365756.0849251"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2070"
-            endingLineNumber = "2070"
+            startingLineNumber = "2209"
+            endingLineNumber = "2209"
+            landmarkName = "quit()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "gameboy emulator/main.cpp"
+            timestampString = "564365756.085278"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2214"
+            endingLineNumber = "2214"
+            landmarkName = "PPU"
+            landmarkType = "3">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "gameboy emulator/main.cpp"
+            timestampString = "564365756.085619"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2170"
+            endingLineNumber = "2170"
             landmarkName = "step()"
             landmarkType = "7">
          </BreakpointContent>
@@ -122,59 +154,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "gameboy emulator/main.cpp"
-            timestampString = "564012858.368418"
+            timestampString = "564365756.08597"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2087"
-            endingLineNumber = "2087"
-            landmarkName = "step()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "gameboy emulator/main.cpp"
-            timestampString = "564012858.368688"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2092"
-            endingLineNumber = "2092"
-            landmarkName = "step()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "gameboy emulator/main.cpp"
-            timestampString = "564012858.368969"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2051"
-            endingLineNumber = "2051"
-            landmarkName = "step()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "gameboy emulator/main.cpp"
-            timestampString = "564012858.369275"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2552"
-            endingLineNumber = "2552"
+            startingLineNumber = "2674"
+            endingLineNumber = "2674"
             landmarkName = "disassembleOpcode(const BYTE&amp; opcode)"
             landmarkType = "9">
          </BreakpointContent>
@@ -186,11 +170,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "gameboy emulator/main.cpp"
-            timestampString = "564012858.369545"
+            timestampString = "564365756.086321"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2553"
-            endingLineNumber = "2553"
+            startingLineNumber = "2675"
+            endingLineNumber = "2675"
             landmarkName = "disassembleOpcode(const BYTE&amp; opcode)"
             landmarkType = "9">
          </BreakpointContent>
@@ -202,11 +186,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "gameboy emulator/main.cpp"
-            timestampString = "564012858.3698159"
+            timestampString = "564365756.086668"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "476"
-            endingLineNumber = "476"
+            startingLineNumber = "586"
+            endingLineNumber = "586"
             landmarkName = "writeByte(WORD address, BYTE val)"
             landmarkType = "7">
          </BreakpointContent>
@@ -218,11 +202,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "gameboy emulator/main.cpp"
-            timestampString = "564012858.370086"
+            timestampString = "564365756.087041"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "404"
-            endingLineNumber = "404"
+            startingLineNumber = "476"
+            endingLineNumber = "476"
             landmarkName = "readByte(WORD address)"
             landmarkType = "7">
          </BreakpointContent>
@@ -234,12 +218,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "gameboy emulator/main.cpp"
-            timestampString = "564012858.37035"
+            timestampString = "564365756.087479"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "493"
-            endingLineNumber = "493"
-            landmarkName = "writeByte(WORD address, BYTE val)"
+            startingLineNumber = "611"
+            endingLineNumber = "611"
+            landmarkName = "writeWord(WORD address, WORD val)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -250,12 +234,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "gameboy emulator/main.cpp"
-            timestampString = "564012858.370616"
+            timestampString = "564365756.087853"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "320"
-            endingLineNumber = "320"
-            landmarkName = "updateTileSet(WORD addr)"
+            startingLineNumber = "478"
+            endingLineNumber = "478"
+            landmarkName = "readByte(WORD address)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -266,12 +250,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "gameboy emulator/main.cpp"
-            timestampString = "564012858.370876"
+            timestampString = "564365756.08822"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "425"
-            endingLineNumber = "425"
-            landmarkName = "writeByte(WORD address, BYTE val)"
+            startingLineNumber = "453"
+            endingLineNumber = "453"
+            landmarkName = "reset()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -282,123 +266,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "gameboy emulator/main.cpp"
-            timestampString = "564012858.371139"
+            timestampString = "564365756.088581"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "322"
-            endingLineNumber = "322"
-            landmarkName = "updateTileSet(WORD addr)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "gameboy emulator/main.cpp"
-            timestampString = "564012858.3714091"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "317"
-            endingLineNumber = "317"
-            landmarkName = "updateTileSet(WORD addr)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "gameboy emulator/main.cpp"
-            timestampString = "564012858.371671"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "489"
-            endingLineNumber = "489"
-            landmarkName = "writeByte(WORD address, BYTE val)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "gameboy emulator/main.cpp"
-            timestampString = "564012858.37193"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "309"
-            endingLineNumber = "309"
-            landmarkName = "updateTileSet(WORD addr)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "gameboy emulator/main.cpp"
-            timestampString = "564012858.372189"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "124"
-            endingLineNumber = "124"
-            landmarkName = "keyDown(SDL_Keycode key)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "gameboy emulator/main.cpp"
-            timestampString = "564012858.3724639"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "120"
-            endingLineNumber = "120"
-            landmarkName = "keyDown(SDL_Keycode key)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "gameboy emulator/main.cpp"
-            timestampString = "564012858.372721"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "113"
-            endingLineNumber = "113"
-            landmarkName = "keyDown(SDL_Keycode key)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "gameboy emulator/main.cpp"
-            timestampString = "564012858.372983"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2067"
-            endingLineNumber = "2067"
+            startingLineNumber = "2189"
+            endingLineNumber = "2189"
             landmarkName = "step()"
             landmarkType = "7">
          </BreakpointContent>
@@ -410,11 +282,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "gameboy emulator/main.cpp"
-            timestampString = "564012858.3732491"
+            timestampString = "564365756.0889471"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2068"
-            endingLineNumber = "2068"
+            startingLineNumber = "2190"
+            endingLineNumber = "2190"
             landmarkName = "step()"
             landmarkType = "7">
          </BreakpointContent>
@@ -426,11 +298,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "gameboy emulator/main.cpp"
-            timestampString = "564012858.373512"
+            timestampString = "564365756.089309"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2078"
-            endingLineNumber = "2078"
+            startingLineNumber = "2200"
+            endingLineNumber = "2200"
             landmarkName = "step()"
             landmarkType = "7">
          </BreakpointContent>
@@ -442,11 +314,187 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "gameboy emulator/main.cpp"
-            timestampString = "564012858.373778"
+            timestampString = "564365756.089672"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2009"
-            endingLineNumber = "2009"
+            startingLineNumber = "2058"
+            endingLineNumber = "2058"
+            landmarkName = "renderSprites(BYTE scanRow[160])"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "gameboy emulator/main.cpp"
+            timestampString = "564365756.0900429"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2144"
+            endingLineNumber = "2144"
+            landmarkName = "step()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "gameboy emulator/main.cpp"
+            timestampString = "564365756.0904191"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2038"
+            endingLineNumber = "2038"
+            landmarkName = "renderSprites(BYTE scanRow[160])"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "gameboy emulator/main.cpp"
+            timestampString = "564365756.090783"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "481"
+            endingLineNumber = "481"
+            landmarkName = "readByte(WORD address)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "gameboy emulator/main.cpp"
+            timestampString = "564365756.091164"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1950"
+            endingLineNumber = "1950"
+            landmarkName = "initVideo()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "gameboy emulator/main.cpp"
+            timestampString = "564365756.091537"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "486"
+            endingLineNumber = "486"
+            landmarkName = "readByte(WORD address)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "gameboy emulator/main.cpp"
+            timestampString = "564365756.09196"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2037"
+            endingLineNumber = "2037"
+            landmarkName = "renderSprites(BYTE scanRow[160])"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "gameboy emulator/main.cpp"
+            timestampString = "564365756.092383"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2034"
+            endingLineNumber = "2034"
+            landmarkName = "renderSprites(BYTE scanRow[160])"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "gameboy emulator/main.cpp"
+            timestampString = "564365756.0927401"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "616"
+            endingLineNumber = "616"
+            landmarkName = "readROM(const std::string&amp; rom)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "gameboy emulator/main.cpp"
+            timestampString = "564365756.0931031"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "528"
+            endingLineNumber = "528"
+            landmarkName = "writeByte(WORD address, BYTE val)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "gameboy emulator/main.cpp"
+            timestampString = "564365756.093446"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2050"
+            endingLineNumber = "2050"
+            landmarkName = "renderSprites(BYTE scanRow[160])"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "gameboy emulator/main.cpp"
+            timestampString = "564365756.093796"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2061"
+            endingLineNumber = "2061"
             landmarkName = "renderSprites(BYTE scanRow[160])"
             landmarkType = "7">
          </BreakpointContent>
@@ -458,11 +506,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "gameboy emulator/main.cpp"
-            timestampString = "564012858.3740489"
+            timestampString = "564365756.0941451"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "128"
-            endingLineNumber = "128"
+            startingLineNumber = "153"
+            endingLineNumber = "153"
             landmarkName = "keyDown(SDL_Keycode key)"
             landmarkType = "7">
          </BreakpointContent>
@@ -474,12 +522,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "gameboy emulator/main.cpp"
-            timestampString = "564012858.374316"
+            timestampString = "564365756.0944951"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2033"
-            endingLineNumber = "2033"
-            landmarkName = "renderScan()"
+            startingLineNumber = "1263"
+            endingLineNumber = "1263"
+            landmarkName = "CPU_DI()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -490,28 +538,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "gameboy emulator/main.cpp"
-            timestampString = "564012858.3745739"
+            timestampString = "564365756.094852"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1989"
-            endingLineNumber = "1989"
-            landmarkName = "renderSprites(BYTE scanRow[160])"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "gameboy emulator/main.cpp"
-            timestampString = "564012858.37484"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "325"
-            endingLineNumber = "325"
-            landmarkName = "updateSpriteSet(WORD addr, BYTE val)"
+            startingLineNumber = "1267"
+            endingLineNumber = "1267"
+            landmarkName = "CPU_EI()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -522,75 +554,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "gameboy emulator/main.cpp"
-            timestampString = "564012858.375129"
+            timestampString = "564365756.0951869"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1901"
-            endingLineNumber = "1901"
-            landmarkName = "initSpriteSet()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "gameboy emulator/main.cpp"
-            timestampString = "564012858.375393"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "327"
-            endingLineNumber = "327"
-            landmarkName = "updateSpriteSet(WORD addr, BYTE val)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "gameboy emulator/main.cpp"
-            timestampString = "564012858.3756551"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1988"
-            endingLineNumber = "1988"
-            landmarkName = "renderSprites(BYTE scanRow[160])"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "gameboy emulator/main.cpp"
-            timestampString = "564012858.375921"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1985"
-            endingLineNumber = "1985"
-            landmarkName = "renderSprites(BYTE scanRow[160])"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "gameboy emulator/main.cpp"
-            timestampString = "564012858.376186"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "430"
-            endingLineNumber = "430"
+            startingLineNumber = "549"
+            endingLineNumber = "549"
             landmarkName = "writeByte(WORD address, BYTE val)"
             landmarkType = "7">
          </BreakpointContent>
@@ -602,12 +570,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "gameboy emulator/main.cpp"
-            timestampString = "564012858.3764499"
+            timestampString = "564365766.831364"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "363"
-            endingLineNumber = "363"
-            landmarkName = "dmaTransfer(const BYTE&amp; val)"
+            startingLineNumber = "548"
+            endingLineNumber = "548"
+            landmarkName = "writeByte(WORD address, BYTE val)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -618,28 +586,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "gameboy emulator/main.cpp"
-            timestampString = "564012858.376712"
+            timestampString = "564365768.980453"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2001"
-            endingLineNumber = "2001"
-            landmarkName = "renderSprites(BYTE scanRow[160])"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "gameboy emulator/main.cpp"
-            timestampString = "564012858.376978"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2012"
-            endingLineNumber = "2012"
-            landmarkName = "renderSprites(BYTE scanRow[160])"
+            startingLineNumber = "547"
+            endingLineNumber = "547"
+            landmarkName = "writeByte(WORD address, BYTE val)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
