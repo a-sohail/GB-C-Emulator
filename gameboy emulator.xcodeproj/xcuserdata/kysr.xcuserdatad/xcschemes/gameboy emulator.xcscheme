@@ -69,6 +69,10 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "02-interrupts.gb"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "dr-mario.gb"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument

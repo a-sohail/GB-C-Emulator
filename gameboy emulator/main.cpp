@@ -277,6 +277,8 @@ public:
     
     void addToClock(int clockCycles){
         
+        //clockCycles /= 4;
+        
         // handle dividers
         dividerClock += clockCycles;
         if(dividerClock >= 256){
@@ -292,7 +294,7 @@ public:
                 
                 setControlRate();
                 
-                if(control == 0xFF){
+                if(counter == 0xFF){
                     counter = modulo;
                     // Request Timer Interrupt by setting bit 2 in IF Register
                     ifRegister |= 0x4;
@@ -307,16 +309,16 @@ public:
     void setControlRate(){
         switch(control & 0x3){
             case 0:
-                controlClock = CLOCKSPEED / 4096;
+                controlClock = (CLOCKSPEED / 4096);
                 break;
             case 1:
-                controlClock = CLOCKSPEED / 262144;
+                controlClock = (CLOCKSPEED / 262144);
                 break;
             case 2:
-                controlClock = CLOCKSPEED / 65536;
+                controlClock = (CLOCKSPEED / 65536);
                 break;
             case 3:
-                controlClock = CLOCKSPEED / 16384;
+                controlClock = (CLOCKSPEED / 16384);
                 break;
             default:
                 break;
@@ -471,7 +473,7 @@ public:
             return timer.modulo;
         }
         else if(address == 0xFF07){
-            return timer.control;
+            return timer.control & 0x3;
         }
         else if(address == 0xFF40){
             return (switchBG  ? 0x01 : 0x00) |
@@ -550,7 +552,7 @@ public:
             return;
         }
         else if (address == 0xFF0F){
-            ifRegister = 0xE0 | val;
+            ifRegister = 0x1F & val;
             return;
         }
         else if(address == 0xFF40){
@@ -1322,7 +1324,7 @@ class CPU{
         SP.reg = 0;
         PC = 0;
         clock = 0;
-        ifRegister = 0xE0;
+        ifRegister = 0x0;
     }
     
     int executeExtendedOpcode(const BYTE& opcode){
@@ -2837,13 +2839,12 @@ int main(int argc, char *argv[]){
             ppu.step();
             cpu.handleInterrupts();
         }
-        if(PC == 0xc2f9)
-            std::exit(0);
+
         frameCycles %= maxCycles;
         auto endTime = std::chrono::system_clock::now();
         
         auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
-        auto frameCap = std::chrono::milliseconds(60 / 60);
+        auto frameCap = std::chrono::milliseconds(200 / 60);
         
         if (diff < frameCap)
             std::this_thread::sleep_for(frameCap - diff);
