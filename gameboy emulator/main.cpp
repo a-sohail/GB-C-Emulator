@@ -20,7 +20,7 @@
 #define FLAG_C 0x10
 
 // 2^16 spots
-#define MAX_MEMORY 65536
+#define MAX_MEMORY 0x200000
 
 // 160 * 144 * 4 == width * height * rgba
 #define FRAME_BUFFER_LENGTH 92160
@@ -359,8 +359,16 @@ public:
     
     BYTE lcdStatRegister = 0;
     
+    // Memory Banking
+    bool mbc1 = false;
+    BYTE romBankNumber = 0x01;
+    BYTE ramBankNumber = 0x0;
+    bool ramEnabled = false;
+    bool romMode = true;
+    
 private:
     BYTE memory[MAX_MEMORY];
+    BYTE ramMemory[0x8000];
     
     bool inBIOS = true;
     
@@ -450,15 +458,68 @@ private:
 public:
     
     void reset(){
-        for(int i = 0; i < MAX_MEMORY; i++){
-            memory[i] = 0;
+        memset(&memory, 0, MAX_MEMORY);
+        memset(&ramMemory, 0, sizeof(ramMemory));
+    }
+    
+    void updateBanking(){
+        switch(memory[0x147]){
+            case 1  : mbc1 = true; break;
+            case 2  : mbc1 = true; break;
+            default : mbc1 = false; break;
         }
+    }
+    
+    void handleBanking(WORD address, BYTE val){
+        if(!mbc1){
+            return;
+        }
+        
+        if(address < 0x2000){
+            ramEnabled = (val & 0x0F) == 0x0A;
+        }
+        else if(address < 0x4000){
+            val = (romBankNumber & 0xE0) | (val & 0x1F);
+            switch(val){
+                case 0x00:
+                case 0x20:
+                case 0x40:
+                case 0x60:
+                    val++;
+                default: break;
+            }
+            romBankNumber = val;
+        }
+        else if(address < 0x6000){
+            if(romMode){
+                romBankNumber = (val & 0xE0) | (romBankNumber & 0x1F);
+                if(!romBankNumber){
+                    romBankNumber++;
+                }
+            }
+            else{
+                ramBankNumber = val & 0x3;
+            }
+        }
+        else if(address < 0x8000){
+            romMode = (val & 0x1) == 0x00;
+            if(romMode){
+                ramBankNumber = 0;
+            }
+        }
+        
     }
     
     BYTE readByte(WORD address){
         
         if(inBIOS && address < 0x100){
             return bootROM[address];
+        }
+        else if (address >= 0x4000 && address <= 0x7FFF){
+            return memory[(address - 0x4000) + (romBankNumber * 0x4000)];
+        }
+        else if(address >= 0xA000 && address <= 0xBFFF){
+            return ramMemory[(address - 0xA000) + (ramBankNumber * 0x2000)];
         }
         else if (address == 0xFF00){
             return joypad.readByte();
@@ -506,13 +567,16 @@ public:
     
     void writeByte(WORD address, BYTE val){
         
-//        // For blarrg's test ROMS
-//        if (address == 0xFF02 && val == 0x81) {
-//            std::cout << readByte(0xFF01);
-//        }
-        
-        // rom or unusable memory
-        if(address < 0x8000 || (address >= 0xFEA0 && address <= 0xFEFF)){
+        if(address >= 0xFEA0 && address <= 0xFEFF){
+            return;
+        }
+        else if(address < 0x8000){
+            handleBanking(address, val);
+        }
+        else if(address >= 0xA000 && address < 0xC000){
+            if(ramEnabled){
+                ramMemory[(address - 0xA000) + (ramBankNumber * 0x2000)] = val;
+            }
             return;
         }
         // Echo
@@ -617,12 +681,7 @@ public:
     void readROM(const std::string& rom){
         FILE * file = fopen(rom.c_str(), "rb");
         if (file == NULL) return;
-        fseek(file, 0, SEEK_END);
-        long int size = ftell(file);
-        fclose(file);
-        // Reading data to array of unsigned chars
-        file = fopen(rom.c_str(), "rb");
-        fread(memory, sizeof(BYTE), size, file);
+        fread(memory, sizeof(BYTE), MAX_MEMORY, file);
         fclose(file);
     }
 };
@@ -1987,9 +2046,9 @@ class PPU{
         // Determine where to draw on screen (framebuffer)
         int screenOffset = mmu.line * 160 * 4;
         
-        BYTE tile = mmu.readByte(tileIDAddress);
+        int tile = mmu.readByte(tileIDAddress);
         
-        if(mmu.bgTile && tile < 128){
+        if(!mmu.bgTile && tile < 128){
             tile += 256;
         }
         
@@ -2012,7 +2071,7 @@ class PPU{
                 x = 0;
                 tileIndex++;
                 tile = mmu.readByte(mapOffset + tileIndex);
-                if(mmu.bgTile == 1 && tile < 128){
+                if(!mmu.bgTile && tile < 128){
                     tile += 256;
                 }
             }
@@ -2064,6 +2123,9 @@ class PPU{
     }
     
     void renderScan(){
+        if(!mmu.switchLCD){
+            return;
+        }
         BYTE scanRow[160];
         if(mmu.switchBG){
             renderBackground(scanRow);
@@ -2074,13 +2136,13 @@ class PPU{
     }
     
     void setLCDStatus(){
-        if(!mmu.switchLCD){
-            clock = 1824;
-            mmu.line = 0;
-            mmu.lcdStatRegister &= 0xFC;
-            mmu.lcdStatRegister |= 0x01;
-            return;
-        }
+//        if(!mmu.switchLCD){
+//            clock = 1824;
+//            mmu.line = 0;
+//            mmu.lcdStatRegister &= 0xFC;
+//            mmu.lcdStatRegister |= 0x01;
+//            return;
+//        }
         
         BYTE currentMode = mmu.lcdStatRegister & 0x3;
         
@@ -2147,9 +2209,9 @@ public:
         
         setLCDStatus();
         
-        if(!mmu.switchLCD){
-            return;
-        }
+//        if(!mmu.switchLCD){
+//            return;
+//        }
         
         // Screen cycles through (OAM -> VRAM -> HBLANK) * 144 -> VBLANK
         switch (mode){
@@ -2800,6 +2862,7 @@ int main(int argc, char *argv[]){
     ppu.reset();
     
     mmu.readROM(argv[1]);
+    mmu.updateBanking();
     
     PC = 0xFE;
     SP.reg = 0xFFFE;
@@ -2831,6 +2894,13 @@ int main(int argc, char *argv[]){
         while (frameCycles < maxCycles){
             //printState();
             //printLog();
+//            if(PC == 0x358){
+//                printTileSet();
+//                std::cout << std::endl;
+//                printTileMap();
+//                std::exit(0);
+//            }
+            
             clockCycles = cpu.step();
             frameCycles += clockCycles;
             cpu.addToClock(clockCycles);
