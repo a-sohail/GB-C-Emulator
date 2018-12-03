@@ -21,6 +21,7 @@
 
 // 2^16 spots
 #define MAX_MEMORY 0x200000
+#define GAMEBOY_MEMORY 65536
 
 // 160 * 144 * 4 == width * height * rgba
 #define FRAME_BUFFER_LENGTH 92160
@@ -330,7 +331,7 @@ public:
 Timer timer;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+int bankNumber = 0;
 class MMU{
     
     // PPU Registers and Tile Set
@@ -367,7 +368,8 @@ public:
     bool romMode = true;
     
 private:
-    BYTE memory[MAX_MEMORY];
+    BYTE memory[GAMEBOY_MEMORY];
+    BYTE cartridgeMemory[MAX_MEMORY];
     BYTE ramMemory[0x8000];
     
     bool inBIOS = true;
@@ -458,12 +460,13 @@ private:
 public:
     
     void reset(){
-        memset(&memory, 0, MAX_MEMORY);
+        memset(&memory, 0, GAMEBOY_MEMORY);
+        memset(&cartridgeMemory, 0, MAX_MEMORY);
         memset(&ramMemory, 0, sizeof(ramMemory));
     }
     
     void updateBanking(){
-        switch(memory[0x147]){
+        switch(cartridgeMemory[0x147]){
             case 1  : mbc1 = true; break;
             case 2  : mbc1 = true; break;
             default : mbc1 = false; break;
@@ -489,10 +492,11 @@ public:
                 default: break;
             }
             romBankNumber = val;
+            bankNumber++;
         }
         else if(address < 0x6000){
             if(romMode){
-                romBankNumber = (val & 0xE0) | (romBankNumber & 0x1F);
+                romBankNumber = ((val & 0x3) << 5) + (romBankNumber & 0x1F);
                 if(!romBankNumber){
                     romBankNumber++;
                 }
@@ -516,7 +520,7 @@ public:
             return bootROM[address];
         }
         else if (address >= 0x4000 && address <= 0x7FFF){
-            return memory[(address - 0x4000) + (romBankNumber * 0x4000)];
+            return cartridgeMemory[(address - 0x4000) + (romBankNumber * 0x4000)];
         }
         else if(address >= 0xA000 && address <= 0xBFFF){
             return ramMemory[(address - 0xA000) + (ramBankNumber * 0x2000)];
@@ -566,7 +570,6 @@ public:
     }
     
     void writeByte(WORD address, BYTE val){
-        
         if(address >= 0xFEA0 && address <= 0xFEFF){
             return;
         }
@@ -681,8 +684,9 @@ public:
     void readROM(const std::string& rom){
         FILE * file = fopen(rom.c_str(), "rb");
         if (file == NULL) return;
-        fread(memory, sizeof(BYTE), MAX_MEMORY, file);
+        fread(cartridgeMemory, sizeof(BYTE), MAX_MEMORY, file);
         fclose(file);
+        memcpy(memory, cartridgeMemory, GAMEBOY_MEMORY*sizeof(BYTE));
     }
 };
 
@@ -1314,6 +1318,7 @@ class CPU{
     
     void CPU_HALT(){
         if(!IME && (ifRegister & ieRegister & 0x1F)){
+            halt = false;
             return;
         }
         PC--;
@@ -1870,7 +1875,7 @@ class CPU{
             case 0x3F: CPU_CCF(); return 4;
             case 0x37: CPU_SCF(); return 4;
             case 0x00: return 4;
-            case 0x76: CPU_HALT(); if(!halt){return 4 + executeOpcode(PC);} return 4;
+            case 0x76: CPU_HALT(); if(!halt){return 4 + executeOpcode(mmu.readByte(PC));} return 4;
             case 0x10: return 4;
             case 0xF3: CPU_DI(); return 4;
             case 0xFB: CPU_EI(); return 4;
@@ -1924,7 +1929,7 @@ public:
         // Check what interrupts are enabled by using the IE and IF registers respectively
         BYTE interrupts =  ifRegister & ieRegister & 0x1F;
         
-        if(halt && interrupts != 0){
+        if(halt && !IME && interrupts){
             PC++;
             halt = false;
         }
@@ -2892,15 +2897,6 @@ int main(int argc, char *argv[]){
         
         auto startTime = std::chrono::system_clock::now();
         while (frameCycles < maxCycles){
-            //printState();
-            //printLog();
-//            if(PC == 0x358){
-//                printTileSet();
-//                std::cout << std::endl;
-//                printTileMap();
-//                std::exit(0);
-//            }
-            
             clockCycles = cpu.step();
             frameCycles += clockCycles;
             cpu.addToClock(clockCycles);
