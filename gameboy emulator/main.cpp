@@ -344,12 +344,18 @@ public:
     
     bool bgMap;
     bool bgTile;
+    bool windowTile;
     bool switchBG;
     bool switchOBJ;
     bool switchLCD;
+    bool switchWindow;
+    bool spriteDoubled;
     
     BYTE scrollX;
     BYTE scrollY;
+    
+    BYTE windowX;
+    BYTE windowY;
     
     int line = 0;
     
@@ -519,6 +525,9 @@ public:
         if(inBIOS && address < 0x100){
             return bootROM[address];
         }
+        else if(address < 0x4000){
+            return cartridgeMemory[address];
+        }
         else if (address >= 0x4000 && address <= 0x7FFF){
             return cartridgeMemory[(address - 0x4000) + (romBankNumber * 0x4000)];
         }
@@ -541,11 +550,14 @@ public:
             return timer.control & 0x3;
         }
         else if(address == 0xFF40){
-            return (switchBG  ? 0x01 : 0x00) |
-                   (switchOBJ ? 0x02 : 0x00) |
-                   (bgMap     ? 0x08 : 0x00) |
-                   (bgTile    ? 0x10 : 0x00) |
-                   (switchLCD ? 0x80 : 0x00);
+            return (switchBG      ? 0x01 : 0x00) |
+                   (switchOBJ     ? 0x02 : 0x00) |
+                   (spriteDoubled ? 0x04 : 0x00) |
+                   (bgMap         ? 0x08 : 0x00) |
+                   (bgTile        ? 0x10 : 0x00) |
+                   (switchWindow  ? 0x20 : 0x00) |
+                   (windowTile    ? 0x40 : 0x00) |
+                   (switchLCD     ? 0x80 : 0x00);
         }
         else if(address == 0xFF41){
             return lcdStatRegister;
@@ -558,6 +570,12 @@ public:
         }
         else if(address == 0xFF44){
             return line;
+        }
+        else if (address == 0xFF4A){
+            return windowY;
+        }
+        else if (address == 0xFF4B){
+            return windowX;
         }
         else if(address == 0xFF0F){
             return ifRegister;
@@ -623,11 +641,14 @@ public:
             return;
         }
         else if(address == 0xFF40){
-            switchBG  = (val & 0x01) ? 1 : 0;
-            switchOBJ = (val & 0x02) ? 1 : 0;
-            bgMap     = (val & 0x08) ? 1 : 0;
-            bgTile    = (val & 0x10) ? 1 : 0;
-            switchLCD = (val & 0x80) ? 1 : 0;
+            switchBG      = (val & 0x01) ? 1 : 0;
+            switchOBJ     = (val & 0x02) ? 1 : 0;
+            spriteDoubled = (val & 0x04) ? 1 : 0;
+            bgMap         = (val & 0x08) ? 1 : 0;
+            bgTile        = (val & 0x10) ? 1 : 0;
+            switchWindow  = (val & 0x20) ? 1 : 0;
+            windowTile    = (val & 0x40) ? 1 : 0;
+            switchLCD     = (val & 0x80) ? 1 : 0;
             return;
         }
         else if(address == 0xFF41){
@@ -640,6 +661,14 @@ public:
         }
         else if(address == 0xFF43){
             scrollX = val;
+            return;
+        }
+        else if(address == 0xFF4A){
+            windowY = val;
+            return;
+        }
+        else if(address == 0xFF4B){
+            windowX = val;
             return;
         }
         else if(address == 0xFF46){
@@ -684,7 +713,7 @@ public:
     void readROM(const std::string& rom){
         FILE * file = fopen(rom.c_str(), "rb");
         if (file == NULL) return;
-        fread(cartridgeMemory, sizeof(BYTE), MAX_MEMORY, file);
+        fread(cartridgeMemory, 1, MAX_MEMORY, file);
         fclose(file);
         memcpy(memory, cartridgeMemory, GAMEBOY_MEMORY*sizeof(BYTE));
     }
@@ -1929,7 +1958,7 @@ public:
         // Check what interrupts are enabled by using the IE and IF registers respectively
         BYTE interrupts =  ifRegister & ieRegister & 0x1F;
         
-        if(halt && !IME && interrupts){
+        if(halt && interrupts){
             PC++;
             halt = false;
         }
@@ -2035,7 +2064,7 @@ class PPU{
         // Work out the index of the pixel in the framebuffer
         WORD lineOffset = mmu.scrollX % 256;
         WORD rowOffset = (mmu.scrollY + mmu.line) % 256;
-        
+        std::cout << std::hex << (int) mmu.line << std::endl;
         // Work out the tile for this pixel
         WORD tileX = lineOffset / 8;
         WORD tileY = rowOffset / 8;
@@ -2045,8 +2074,8 @@ class PPU{
         WORD tileIDAddress = mapOffset + tileIndex;
         
         // Narrow down exactly which row of pixels and offset to start from
-        int y = (mmu.line + mmu.scrollY) & 0x7;
-        int x = mmu.scrollX & 0x7;
+        int y = (mmu.line + mmu.scrollY) % 8;
+        int x = mmu.scrollX % 8;
         
         // Determine where to draw on screen (framebuffer)
         int screenOffset = mmu.line * 160 * 4;
@@ -2083,19 +2112,81 @@ class PPU{
         }
     }
     
+    void renderWindow(BYTE scanRow[160]){
+        
+        if (mmu.line < mmu.windowY){
+            return;
+        }
+        
+        // Determine which map to use
+        WORD mapOffset = mmu.windowTile ? 0x9C00 : 0x9800;
+        
+        // Work out the index of the pixel in the framebuffer
+        WORD lineOffset = mmu.windowX - 7;
+        WORD rowOffset = mmu.line - mmu.windowY;
+        
+        // Work out the tile for this pixel
+        WORD tileX = lineOffset / 8;
+        WORD tileY = rowOffset / 8;
+        
+        // Work out the index of the tile in the array of all tiles
+        WORD tileIndex = tileY * 32 + tileX;
+        WORD tileIDAddress = mapOffset + tileIndex;
+        
+        // Narrow down exactly which row of pixels and offset to start from
+        int x = lineOffset % 8;
+        int y = rowOffset % 8;
+        
+        // Determine where to draw on screen (framebuffer)
+        int screenOffset = mmu.line * 160 * 4;
+        
+        int tile = mmu.readByte(tileIDAddress);
+        
+        if(!mmu.bgTile && tile < 128){
+            tile += 256;
+        }
+        
+        for(int column = 0; column < 160; column++){
+            // Map to palette
+            BYTE colour[4];
+            
+            for(int i = 0; i < 4; i++){
+                colour[i] = mmu.palette[mmu.tileSet[tile][y][x]][i];
+            }
+            scanRow[column] = mmu.tileSet[tile][y][x];
+            frameBuffer[screenOffset] = colour[0];
+            frameBuffer[screenOffset + 1] = colour[1];
+            frameBuffer[screenOffset + 2] = colour[2];
+            frameBuffer[screenOffset + 3] = colour[3];
+            screenOffset += 4;
+            
+            // Read next tile
+            x++;
+            if(x == 8){
+                x = 0;
+                tileIndex++;
+                tile = mmu.readByte(mapOffset + tileIndex);
+                if(!mmu.bgTile && tile < 128){
+                    tile += 256;
+                }
+            }
+        }
+    }
+    
     void renderSprites(BYTE scanRow[160]){
         for(int i = 0; i < 40; i++){
             
             SPRITE& sprite = mmu.spriteSet[i];
             
-            if(sprite.getPosY() <= mmu.line && (sprite.getPosY() + 8) > mmu.line){
+            int height = mmu.spriteDoubled ? 16 : 8;
+            if(sprite.getPosY() <= mmu.line && (sprite.getPosY() + height) > mmu.line){
                 int screenOffset = (mmu.line * 160 + sprite.getPosX()) * 4;
                 
                 BYTE tileRow[8];
                 for(int j = 0; j < 8; j++){
                     tileRow[j] = mmu.tileSet[sprite.getTileNumber()]
                                             [sprite.isFlippedY() ?
-                                             (7 - (mmu.line - sprite.getPosY())) :
+                                             ((height - 1) - (mmu.line - sprite.getPosY())) :
                                              (mmu.line - sprite.getPosY())
                                             ]
                                             [j];
@@ -2128,26 +2219,27 @@ class PPU{
     }
     
     void renderScan(){
+        
         if(!mmu.switchLCD){
             return;
         }
+        
         BYTE scanRow[160];
         if(mmu.switchBG){
             renderBackground(scanRow);
         }
+        
+        if(mmu.switchWindow){
+            renderWindow(scanRow);
+        }
+        
         if(mmu.switchOBJ){
             renderSprites(scanRow);
         }
+        
     }
     
     void setLCDStatus(){
-//        if(!mmu.switchLCD){
-//            clock = 1824;
-//            mmu.line = 0;
-//            mmu.lcdStatRegister &= 0xFC;
-//            mmu.lcdStatRegister |= 0x01;
-//            return;
-//        }
         
         BYTE currentMode = mmu.lcdStatRegister & 0x3;
         
@@ -2213,10 +2305,6 @@ public:
     void step(){
         
         setLCDStatus();
-        
-//        if(!mmu.switchLCD){
-//            return;
-//        }
         
         // Screen cycles through (OAM -> VRAM -> HBLANK) * 144 -> VBLANK
         switch (mode){
