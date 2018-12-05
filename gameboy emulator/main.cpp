@@ -2058,35 +2058,37 @@ class PPU{
     }
     
     void renderBackground(BYTE scanRow[160]){
+        
         // Determine which map to use
         WORD mapOffset = mmu.bgMap ? 0x9C00 : 0x9800;
-        
-        // Work out the index of the pixel in the framebuffer
-        WORD lineOffset = mmu.scrollX % 256;
-        WORD rowOffset = (mmu.scrollY + mmu.line) % 256;
-        std::cout << std::hex << (int) mmu.line << std::endl;
-        // Work out the tile for this pixel
-        WORD tileX = lineOffset / 8;
-        WORD tileY = rowOffset / 8;
-        
-        // Work out the index of the tile in the array of all tiles
-        WORD tileIndex = tileY * 32 + tileX;
-        WORD tileIDAddress = mapOffset + tileIndex;
-        
-        // Narrow down exactly which row of pixels and offset to start from
-        int y = (mmu.line + mmu.scrollY) % 8;
-        int x = mmu.scrollX % 8;
         
         // Determine where to draw on screen (framebuffer)
         int screenOffset = mmu.line * 160 * 4;
         
-        int tile = mmu.readByte(tileIDAddress);
-        
-        if(!mmu.bgTile && tile < 128){
-            tile += 256;
-        }
-        
         for(int column = 0; column < 160; column++){
+            
+            // Work out the index of the pixel in the framebuffer
+            WORD lineOffset = (mmu.scrollX + column  ) % 256;
+            WORD rowOffset  = (mmu.scrollY + mmu.line) % 256;
+            
+            // Work out the tile for this pixel
+            WORD tileX = lineOffset / 8;
+            WORD tileY = rowOffset / 8;
+            
+            // Work out the index of the tile in the array of all tiles
+            WORD tileIndex = tileY * 32 + tileX;
+            WORD tileIDAddress = mapOffset + tileIndex;
+            
+            // Narrow down exactly which row of pixels and offset to start from
+            int y = rowOffset % 8;
+            int x = lineOffset % 8;
+            
+            int tile = mmu.readByte(tileIDAddress);
+            
+            if(!mmu.bgTile && tile < 128){
+                tile += 256;
+            }
+            
             // Map to palette
             BYTE colour[4];
             for(int i = 0; i < 4; i++){
@@ -2098,17 +2100,6 @@ class PPU{
             frameBuffer[screenOffset + 2] = colour[2];
             frameBuffer[screenOffset + 3] = colour[3];
             screenOffset += 4;
-            
-            // Read next tile
-            x++;
-            if(x == 8){
-                x = 0;
-                tileIndex++;
-                tile = mmu.readByte(mapOffset + tileIndex);
-                if(!mmu.bgTile && tile < 128){
-                    tile += 256;
-                }
-            }
         }
     }
     
@@ -2121,32 +2112,33 @@ class PPU{
         // Determine which map to use
         WORD mapOffset = mmu.windowTile ? 0x9C00 : 0x9800;
         
-        // Work out the index of the pixel in the framebuffer
-        WORD lineOffset = mmu.windowX - 7;
-        WORD rowOffset = mmu.line - mmu.windowY;
-        
-        // Work out the tile for this pixel
-        WORD tileX = lineOffset / 8;
-        WORD tileY = rowOffset / 8;
-        
-        // Work out the index of the tile in the array of all tiles
-        WORD tileIndex = tileY * 32 + tileX;
-        WORD tileIDAddress = mapOffset + tileIndex;
-        
-        // Narrow down exactly which row of pixels and offset to start from
-        int x = lineOffset % 8;
-        int y = rowOffset % 8;
-        
         // Determine where to draw on screen (framebuffer)
         int screenOffset = mmu.line * 160 * 4;
         
-        int tile = mmu.readByte(tileIDAddress);
-        
-        if(!mmu.bgTile && tile < 128){
-            tile += 256;
-        }
-        
         for(int column = 0; column < 160; column++){
+            
+            // Work out the index of the pixel in the framebuffer
+            WORD lineOffset = mmu.windowX + column - 7;
+            WORD rowOffset = mmu.line - mmu.windowY;
+            
+            // Work out the tile for this pixel
+            WORD tileX = lineOffset / 8;
+            WORD tileY = rowOffset / 8;
+            
+            // Work out the index of the tile in the array of all tiles
+            WORD tileIndex = tileY * 32 + tileX;
+            WORD tileIDAddress = mapOffset + tileIndex;
+            
+            // Narrow down exactly which row of pixels and offset to start from
+            int x = lineOffset % 8;
+            int y = rowOffset % 8;
+            
+            int tile = mmu.readByte(tileIDAddress);
+            
+            if(!mmu.bgTile && tile < 128){
+                tile += 256;
+            }
+            
             // Map to palette
             BYTE colour[4];
             
@@ -2159,17 +2151,6 @@ class PPU{
             frameBuffer[screenOffset + 2] = colour[2];
             frameBuffer[screenOffset + 3] = colour[3];
             screenOffset += 4;
-            
-            // Read next tile
-            x++;
-            if(x == 8){
-                x = 0;
-                tileIndex++;
-                tile = mmu.readByte(mapOffset + tileIndex);
-                if(!mmu.bgTile && tile < 128){
-                    tile += 256;
-                }
-            }
         }
     }
     
@@ -2938,7 +2919,14 @@ void printTileSet(){
 void printTileMap(){
     for(int y = 0; y < 32; y++){
         for(int x = 0; x < 32; x++){
-            std::cout << (int) mmu.readByte(0x9800 + ((y * 32) + x));
+            int p = (int) mmu.readByte(0x9800 + ((y * 32) + x));
+            if(p < 10){
+                std::cout << "00";
+            }
+            else if(p < 100){
+                std::cout << "0";
+            }
+            std::cout << p;
         }
         std::cout << std::endl;
     }

@@ -77,7 +77,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "kirbyDL.gb"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "05-op-rp.gb"
@@ -93,7 +93,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "cpu_instrs.gb"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "ttt.gb"
