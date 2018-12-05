@@ -475,6 +475,7 @@ public:
         switch(cartridgeMemory[0x147]){
             case 1  : mbc1 = true; break;
             case 2  : mbc1 = true; break;
+            case 3  : mbc1 = true; break;
             default : mbc1 = false; break;
         }
     }
@@ -624,16 +625,16 @@ public:
             return;
         }
         else if(address == 0xFF05){
-            timer.counter = val;
+            //timer.counter = val;
             return;
         }
         else if(address == 0xFF06){
-            timer.modulo = val;
+            //timer.modulo = val;
             return;
         }
         else if(address == 0xFF07){
-            timer.control = val;
-            timer.setControlRate();
+//            timer.control = val;
+//            timer.setControlRate();
             return;
         }
         else if (address == 0xFF0F){
@@ -1684,7 +1685,6 @@ class CPU{
     }
     
     int executeOpcode(const BYTE& opcode){
-        //std::cout << "OpCode: " << std::hex << (int) opcode << std::endl;
         switch(opcode){
                 // 8-Bit Loads
             case 0x78: CPU_LOAD(AF.hi, BC.hi); return 4;
