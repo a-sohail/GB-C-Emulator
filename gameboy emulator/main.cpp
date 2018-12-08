@@ -29,6 +29,9 @@
 // 384 max tiles allowed in VRAM
 #define MAX_TILES 384
 
+// Sample size for Audio
+#define SAMPLESIZE 4096
+
 typedef unsigned char BYTE;
 typedef char SIGNED_BYTE;
 typedef unsigned short WORD;
@@ -331,7 +334,333 @@ public:
 Timer timer;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-int bankNumber = 0;
+
+class Tone{
+  
+    BYTE duty = 0;
+    BYTE soundLengthData = 0;
+    float soundLength = 0;
+    
+    bool useSoundLength = false;
+    
+    bool waveDuty[4][8] = {
+        {0, 1, 1, 1, 1, 1, 1, 1},
+        {0, 0, 1, 1, 1, 1, 1, 1},
+        {0, 0, 0, 0, 1, 1, 1, 1},
+        {0, 0, 0, 0, 0, 0, 1, 1}
+    };
+    
+    BYTE waveDutyPointer = 0;
+    
+    BYTE outputVolume = 0;
+    BYTE volume = 0;
+    BYTE volumeEnvelope = 0;
+    bool increaseInvelope = false;
+    BYTE numEnvelopeSweep = 0;
+    float stepLength = 0;
+    
+    WORD frequencyRegister = 0;
+    bool counterConsecutiveSelection = false;
+    bool initial = false;
+    int frequency = 0;
+    
+    bool digitalToAnalog = false;
+    bool enabled = false;
+    
+    void trigger(){
+        
+        enabled = true;
+        if (soundLength == 0) {
+            soundLength = 64;
+        }
+        
+        frequency = (2048 - frequencyRegister) * 4;
+        stepLength = numEnvelopeSweep;
+        volume = volumeEnvelope;
+    }
+    
+public:
+    
+    void writeByte(WORD address, BYTE val){
+        switch ((address & 0xF) % 5) {
+            case 0x1:
+                duty = (val >> 6) & 0x3;
+                soundLengthData = (val & 0x3F);
+                break;
+            case 0x2:
+                digitalToAnalog = (val & 0xF8) != 0;
+                volumeEnvelope = (val >> 4) & 0xF;
+                volume = volumeEnvelope;
+                increaseInvelope = (val >> 3) & 0x1;
+                numEnvelopeSweep = val & 0x7;
+                stepLength = numEnvelopeSweep;
+                break;
+            case 0x3:
+                frequencyRegister &= 0xFF00;
+                frequencyRegister |= val;
+                break;
+            case 0x4:
+                initial = (val >> 7) & 0x1;
+                counterConsecutiveSelection = (val >> 6) & 0x1;
+                frequencyRegister &= 0x00FF;
+                frequencyRegister |= ((val & 0x7) << 8);
+                if(initial){
+                    trigger();
+                }
+                break;
+            default:
+                break;
+        }
+    }
+    
+    BYTE readByte(WORD address){
+        BYTE returnVal = 0x0;
+        switch ((address & 0xF) % 0x5) {
+            case 0x1:
+                returnVal = ((duty & 0x3) << 6) | (soundLengthData & 0x3F);
+                break;
+            case 0x2:
+                returnVal = ((volumeEnvelope & 0xF) << 4) | (increaseInvelope << 3) | (numEnvelopeSweep & 0x7);
+                break;
+            case 0x3:
+                returnVal = frequencyRegister & 0xFF;
+                break;
+            case 0x4:
+                returnVal = (initial << 7) | (counterConsecutiveSelection << 6) | ((frequencyRegister >> 8) & 0x7);
+                break;
+            default:
+                break;
+        }
+        return returnVal;
+    }
+    
+    void step(){
+        if(--frequency <= 0){
+            frequency = (2048 - frequencyRegister) * 4;
+            waveDutyPointer = (waveDutyPointer + 1) & 0x7;
+        }
+        
+        if(enabled && digitalToAnalog){
+            outputVolume = volume;
+        }
+        else{
+            outputVolume = 0;
+        }
+        
+        if(!waveDuty[duty][waveDutyPointer]){
+            outputVolume = 0;
+        }
+    }
+    
+    BYTE getOutputVolume(){
+        return outputVolume;
+    }
+    
+    bool isRunning(){
+        return soundLength > 0;
+    }
+    
+};
+
+class APU{
+  
+    BYTE leftOutputLevel = 0;
+    BYTE rightOutputLevel = 0;
+    
+    bool leftSoundEnable[4] = {0, 0, 0, 0};
+    bool rightSoundEnable[4] = {0, 0, 0, 0};
+    
+    bool soundControl = false;
+    
+    Tone tone1;
+    Tone tone2;
+    
+    SDL_AudioSpec audioSpec;
+    SDL_AudioSpec obtainedSpec;
+    
+    // Header
+    int downSampleCount = 95;
+    int bufferFillAmount = 0;
+    float mainBuffer[4096] = { 0 };
+    
+public:
+    
+    void reset(){
+        SDL_zero(audioSpec);
+        audioSpec.freq = 44100;
+        audioSpec.format = AUDIO_F32SYS;
+        audioSpec.channels = 2;
+        audioSpec.samples = SAMPLESIZE;
+        audioSpec.callback = NULL;
+        audioSpec.userdata = this;
+        
+        if(SDL_OpenAudio(&audioSpec, &obtainedSpec) < 0){
+            SDL_Log("Did not get the audio format");
+        }
+        else{
+            SDL_PauseAudio(0);
+        }
+    }
+    
+    void writeByte(WORD address, BYTE val){
+        if(address >= 0xFF10 && address <= 0xFF14){
+            tone1.writeByte(address, val);
+        }
+        else if(address >= 0xFF16 && address <= 0xFF19){
+            tone2.writeByte(address, val);
+        }
+        else if(address >= 0xFF24 && address <= 0xFF26){
+            switch (address & 0xFF) {
+                case 0x24:
+                    leftOutputLevel = (val >> 4) & 0x7;
+                    rightOutputLevel = val & 0x7;
+                    break;
+                case 0x25:
+                    for(int i = 0; i < 8; i++){
+                        if(i >= 4){
+                            leftSoundEnable[i - 4] = (val >> i) & 0x1;
+                        }
+                        else{
+                            rightSoundEnable[i] = (val >> i) & 0x1;
+                        }
+                    }
+                    break;
+                case 0x26:
+                    soundControl = (val >> 7) & 0x1;
+                    if(!soundControl){
+                        for(int i = 0xFF10; i <= 0xFF25; i++){
+                            writeByte(i, 0);
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        
+    }
+    
+    BYTE readByte(WORD address){
+        
+        BYTE returnValue = 0x0;
+        
+        if(address >= 0xFF10 && address <= 0xFF14){
+            returnValue = tone1.readByte(address);
+        }
+        else if(address >= 0xFF16 && address <= 0xFF19){
+            returnValue = tone2.readByte(address);
+        }
+        else if(address >= 0xFF24 && address <= 0xFF26){
+            switch (address & 0xFF) {
+                case 0x24:
+                    returnValue = (leftOutputLevel << 4) | (rightOutputLevel);
+                    break;
+                case 0x25:
+                    for(int i = 0; i < 8; i++){
+                        if(i < 4){
+                            returnValue |= (rightSoundEnable[i] << i);
+                        }
+                        else{
+                            returnValue |= (leftSoundEnable[i-4] << i);
+                        }
+                    }
+                    break;
+                case 0x26:
+                    returnValue = soundControl;
+                    returnValue <<= 7;
+                    returnValue |= ((tone2.isRunning() << 1) | tone1.isRunning());
+                    break;
+                default:
+                    break;
+            }
+            
+        }
+        
+        return returnValue;
+        
+    }
+    
+    void step(int cycles){
+        
+        if(!soundControl){
+            return;
+        }
+        
+        while(cycles-- != 0){
+            tone1.step();
+            tone2.step();
+            
+            if(--downSampleCount <= 0){
+                downSampleCount = 95;
+            
+                float bufferIn0 = 0;
+                float bufferIn1 = 0;
+                
+                int volume = (128 * leftOutputLevel) / 7;
+                
+                for(int i = 0; i < 4; i++){
+                    if(leftSoundEnable[i]){
+                        switch (i) {
+                            case 0:
+                                bufferIn1 = ((float) tone1.getOutputVolume()) / 100;
+                                break;
+                            case 1:
+                                bufferIn1 = ((float) tone2.getOutputVolume()) / 100;
+                                break;
+                            case 2:
+                                break;
+                            case 3:
+                                break;
+                            default:
+                                break;
+                        }
+                        SDL_MixAudioFormat((Uint8*) &bufferIn0, (Uint8*) &bufferIn1, AUDIO_F32SYS, sizeof(float), volume);
+                    }
+                }
+                
+                mainBuffer[bufferFillAmount++] = bufferIn0;
+                
+                bufferIn0 = 0;
+                volume = (128 * rightOutputLevel) / 7;
+                
+                for(int i = 0; i < 4; i++){
+                    if(rightSoundEnable[i]){
+                        switch (i) {
+                            case 0:
+                                bufferIn1 = ((float) tone1.getOutputVolume()) / 100;
+                                break;
+                            case 1:
+                                bufferIn1 = ((float) tone2.getOutputVolume()) / 100;
+                                break;
+                            case 2:
+                                break;
+                            case 3:
+                                break;
+                            default:
+                                break;
+                        }
+                        SDL_MixAudioFormat((Uint8*) &bufferIn0, (Uint8*) &bufferIn1, AUDIO_F32SYS, sizeof(float), volume);
+                    }
+                }
+                
+                mainBuffer[bufferFillAmount++] = bufferIn0;
+            }
+            
+            if (bufferFillAmount >= SAMPLESIZE) {
+                bufferFillAmount = 0;
+                while(SDL_GetQueuedAudioSize(1) > SAMPLESIZE * sizeof(float)){
+                    SDL_Delay(1);
+                }
+                SDL_QueueAudio(1, mainBuffer, SAMPLESIZE * sizeof(float));
+            }
+        }
+    }
+};
+
+APU apu;
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class MMU{
     
     // PPU Registers and Tile Set
@@ -499,7 +828,6 @@ public:
                 default: break;
             }
             romBankNumber = val;
-            bankNumber++;
         }
         else if(address < 0x6000){
             if(romMode){
@@ -549,6 +877,10 @@ public:
         }
         else if(address == 0xFF07){
             return timer.control & 0x3;
+        }
+        else if((address >= 0xFF10 && address <= 0xFF3F) &&
+                !(address >= 0xFF27 && address <= 0xFF2F)){
+            return apu.readByte(address);
         }
         else if(address == 0xFF40){
             return (switchBG      ? 0x01 : 0x00) |
@@ -639,6 +971,11 @@ public:
         }
         else if (address == 0xFF0F){
             ifRegister = 0x1F & val;
+            return;
+        }
+        else if((address >= 0xFF10 && address <= 0xFF3F) &&
+                !(address >= 0xFF27 && address <= 0xFF2F)){
+            apu.writeByte(address, val);
             return;
         }
         else if(address == 0xFF40){
@@ -2034,7 +2371,6 @@ class PPU{
     }
     
     void initVideo(){
-        SDL_Init(SDL_INIT_VIDEO);
         // width, height, flags, window, renderer
         //SDL_CreateWindowAndRenderer(160, 144, 0, &window, &renderer);
         window = SDL_CreateWindow("Gameboy", SDL_WINDOWPOS_UNDEFINED,
@@ -2044,6 +2380,7 @@ class PPU{
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 0);
         SDL_RenderClear(renderer);
         SDL_RenderPresent(renderer);
+        SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
     }
     
     void renderImage(){
@@ -2932,25 +3269,39 @@ void printTileMap(){
     }
 }
 
+void initSDL(){
+    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
+}
+
 int main(int argc, char *argv[]){
+    
+#ifdef DEBUG
+    std::cout << "DEBUG" << std::endl;
+#else
+    std::cout << "RELEASE" << std::endl;
+#endif
     
     const int maxCycles = (CLOCKSPEED / 60);
     int frameCycles = 0;
     int clockCycles = 0;
     
+    initSDL();
+    
     mmu.reset();
     cpu.reset();
     ppu.reset();
+    apu.reset();
+    
     
     mmu.readROM(argv[1]);
     mmu.updateBanking();
     
-    PC = 0xFE;
-    SP.reg = 0xFFFE;
-    HL.reg = 0x014D;
-    BC.lo = 0x13;
-    DE.hi = 0xD8;
-    AF.hi = 0x01;
+//    PC = 0xFE;
+//    SP.reg = 0xFFFE;
+//    HL.reg = 0x014D;
+//    BC.lo = 0x13;
+//    DE.hi = 0xD8;
+//    AF.hi = 0x01;
     
     SDL_Event e;
     bool quit = false;
@@ -2979,6 +3330,7 @@ int main(int argc, char *argv[]){
             ppu.addToClock(clockCycles);
             timer.addToClock(clockCycles);
             ppu.step();
+            apu.step(clockCycles);
             cpu.handleInterrupts();
         }
 
@@ -2988,8 +3340,9 @@ int main(int argc, char *argv[]){
         auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
         auto frameCap = std::chrono::milliseconds(200 / 60);
         
-        if (diff < frameCap)
-            std::this_thread::sleep_for(frameCap - diff);
+        if (diff < frameCap){
+            //std::this_thread::sleep_for(frameCap - diff);
+        }
         
     }
     ppu.quit();
