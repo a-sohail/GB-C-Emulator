@@ -4,14 +4,14 @@ A Gameboy Emulator project I made for learning (educational) purposes. You can r
 
 Here are some pictures:
 <p align="center">
-  <img width="600" height="200" src="https://puu.sh/CeLp9/2d23ad8c8a.png">
+  <img src="https://puu.sh/CeLp9/2d23ad8c8a.png">
 </p>
 <p align="center">
-  <img width="600" height="200" src="https://puu.sh/CeLoE/559410fa4c.png">
+  <img src="https://puu.sh/CeLoE/559410fa4c.png">
 </p>
 <p align="center">
-  <img width="600" height="200" src="https://puu.sh/CeLpt/ae1d0fa468.png">
+  <img src="https://puu.sh/CeLpt/ae1d0fa468.png">
 </p>
 <p align="center">
-  <img width="600" height="200" src="https://puu.sh/CeLqN/c2fa03379a.png">
+  <img src="https://puu.sh/CeLqN/c2fa03379a.png">
 </p>
