@@ -7,8 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		C96A800C218D1D5400F690B4 /* cpu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C96A800A218D1D5400F690B4 /* cpu.cpp */; };
-		C9DAB1F82155D52100E34F8C /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9DAB1F72155D52100E34F8C /* main.cpp */; };
+		C99EA42421BCA6200039CA62 /* debug.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C99EA42221BCA6200039CA62 /* debug.cpp */; };
+		C99EA42721BCA78F0039CA62 /* definitions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C99EA42521BCA78F0039CA62 /* definitions.cpp */; };
+		C99EA42A21BCA9A70039CA62 /* registers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C99EA42821BCA9A70039CA62 /* registers.cpp */; };
+		C99EA42D21BCAC450039CA62 /* joypad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C99EA42B21BCAC450039CA62 /* joypad.cpp */; };
+		C99EA43021BCAD960039CA62 /* bitOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C99EA42E21BCAD960039CA62 /* bitOperations.cpp */; };
+		C99EA43321BCAE440039CA62 /* sprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C99EA43121BCAE440039CA62 /* sprite.cpp */; };
+		C99EA43621BCAFDC0039CA62 /* timer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C99EA43421BCAFDC0039CA62 /* timer.cpp */; };
+		C99EA43921BCB0D50039CA62 /* apu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C99EA43721BCB0D50039CA62 /* apu.cpp */; };
+		C99EA43C21BCB0F60039CA62 /* tone.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C99EA43A21BCB0F60039CA62 /* tone.cpp */; };
+		C99EA43F21BCB3270039CA62 /* mmu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C99EA43D21BCB3270039CA62 /* mmu.cpp */; };
+		C99EA44221BCB6930039CA62 /* cpu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C99EA44021BCB6930039CA62 /* cpu.cpp */; };
+		C99EA44521BCB9A30039CA62 /* ppu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C99EA44321BCB9A30039CA62 /* ppu.cpp */; };
+		C99EA44821BCBC090039CA62 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C99EA44621BCBC090039CA62 /* main.cpp */; };
 		C9DAB2002155D60500E34F8C /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9DAB1FF2155D60500E34F8C /* SDL2.framework */; };
 /* End PBXBuildFile section */
 
@@ -25,10 +36,33 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		C96A800A218D1D5400F690B4 /* cpu.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = cpu.cpp; path = "gameboy emulator/cpu.cpp"; sourceTree = "<group>"; };
-		C96A800B218D1D5400F690B4 /* cpu.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = cpu.hpp; path = "gameboy emulator/cpu.hpp"; sourceTree = "<group>"; };
+		C99EA42221BCA6200039CA62 /* debug.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = debug.cpp; sourceTree = "<group>"; };
+		C99EA42321BCA6200039CA62 /* debug.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = debug.hpp; sourceTree = "<group>"; };
+		C99EA42521BCA78F0039CA62 /* definitions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = definitions.cpp; sourceTree = "<group>"; };
+		C99EA42621BCA78F0039CA62 /* definitions.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = definitions.hpp; sourceTree = "<group>"; };
+		C99EA42821BCA9A70039CA62 /* registers.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = registers.cpp; sourceTree = "<group>"; };
+		C99EA42921BCA9A70039CA62 /* registers.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = registers.hpp; sourceTree = "<group>"; };
+		C99EA42B21BCAC450039CA62 /* joypad.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = joypad.cpp; sourceTree = "<group>"; };
+		C99EA42C21BCAC450039CA62 /* joypad.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = joypad.hpp; sourceTree = "<group>"; };
+		C99EA42E21BCAD960039CA62 /* bitOperations.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = bitOperations.cpp; sourceTree = "<group>"; };
+		C99EA42F21BCAD960039CA62 /* bitOperations.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = bitOperations.hpp; sourceTree = "<group>"; };
+		C99EA43121BCAE440039CA62 /* sprite.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sprite.cpp; sourceTree = "<group>"; };
+		C99EA43221BCAE440039CA62 /* sprite.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = sprite.hpp; sourceTree = "<group>"; };
+		C99EA43421BCAFDC0039CA62 /* timer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = timer.cpp; sourceTree = "<group>"; };
+		C99EA43521BCAFDC0039CA62 /* timer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = timer.hpp; sourceTree = "<group>"; };
+		C99EA43721BCB0D50039CA62 /* apu.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = apu.cpp; sourceTree = "<group>"; };
+		C99EA43821BCB0D50039CA62 /* apu.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = apu.hpp; sourceTree = "<group>"; };
+		C99EA43A21BCB0F60039CA62 /* tone.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = tone.cpp; sourceTree = "<group>"; };
+		C99EA43B21BCB0F60039CA62 /* tone.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = tone.hpp; sourceTree = "<group>"; };
+		C99EA43D21BCB3270039CA62 /* mmu.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = mmu.cpp; sourceTree = "<group>"; };
+		C99EA43E21BCB3270039CA62 /* mmu.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = mmu.hpp; sourceTree = "<group>"; };
+		C99EA44021BCB6930039CA62 /* cpu.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = cpu.cpp; sourceTree = "<group>"; };
+		C99EA44121BCB6930039CA62 /* cpu.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = cpu.hpp; sourceTree = "<group>"; };
+		C99EA44321BCB9A30039CA62 /* ppu.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ppu.cpp; sourceTree = "<group>"; };
+		C99EA44421BCB9A30039CA62 /* ppu.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ppu.hpp; sourceTree = "<group>"; };
+		C99EA44621BCBC090039CA62 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		C99EA44721BCBC090039CA62 /* main.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = main.hpp; sourceTree = "<group>"; };
 		C9DAB1F42155D52100E34F8C /* gameboy emulator */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "gameboy emulator"; sourceTree = BUILT_PRODUCTS_DIR; };
-		C9DAB1F72155D52100E34F8C /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		C9DAB1FF2155D60500E34F8C /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../../Library/Frameworks/SDL2.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -47,9 +81,32 @@
 		C9DAB1EB2155D52100E34F8C = {
 			isa = PBXGroup;
 			children = (
-				C96A800A218D1D5400F690B4 /* cpu.cpp */,
-				C96A800B218D1D5400F690B4 /* cpu.hpp */,
-				C9DAB1F62155D52100E34F8C /* gameboy emulator */,
+				C99EA44621BCBC090039CA62 /* main.cpp */,
+				C99EA44721BCBC090039CA62 /* main.hpp */,
+				C99EA44321BCB9A30039CA62 /* ppu.cpp */,
+				C99EA44421BCB9A30039CA62 /* ppu.hpp */,
+				C99EA44021BCB6930039CA62 /* cpu.cpp */,
+				C99EA44121BCB6930039CA62 /* cpu.hpp */,
+				C99EA43D21BCB3270039CA62 /* mmu.cpp */,
+				C99EA43E21BCB3270039CA62 /* mmu.hpp */,
+				C99EA43A21BCB0F60039CA62 /* tone.cpp */,
+				C99EA43B21BCB0F60039CA62 /* tone.hpp */,
+				C99EA43721BCB0D50039CA62 /* apu.cpp */,
+				C99EA43821BCB0D50039CA62 /* apu.hpp */,
+				C99EA43421BCAFDC0039CA62 /* timer.cpp */,
+				C99EA43521BCAFDC0039CA62 /* timer.hpp */,
+				C99EA43121BCAE440039CA62 /* sprite.cpp */,
+				C99EA43221BCAE440039CA62 /* sprite.hpp */,
+				C99EA42E21BCAD960039CA62 /* bitOperations.cpp */,
+				C99EA42F21BCAD960039CA62 /* bitOperations.hpp */,
+				C99EA42B21BCAC450039CA62 /* joypad.cpp */,
+				C99EA42C21BCAC450039CA62 /* joypad.hpp */,
+				C99EA42821BCA9A70039CA62 /* registers.cpp */,
+				C99EA42921BCA9A70039CA62 /* registers.hpp */,
+				C99EA42521BCA78F0039CA62 /* definitions.cpp */,
+				C99EA42621BCA78F0039CA62 /* definitions.hpp */,
+				C99EA42221BCA6200039CA62 /* debug.cpp */,
+				C99EA42321BCA6200039CA62 /* debug.hpp */,
 				C9DAB1F52155D52100E34F8C /* Products */,
 				C9DAB1FE2155D60400E34F8C /* Frameworks */,
 			);
@@ -61,14 +118,6 @@
 				C9DAB1F42155D52100E34F8C /* gameboy emulator */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		C9DAB1F62155D52100E34F8C /* gameboy emulator */ = {
-			isa = PBXGroup;
-			children = (
-				C9DAB1F72155D52100E34F8C /* main.cpp */,
-			);
-			path = "gameboy emulator";
 			sourceTree = "<group>";
 		};
 		C9DAB1FE2155D60400E34F8C /* Frameworks */ = {
@@ -135,8 +184,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C96A800C218D1D5400F690B4 /* cpu.cpp in Sources */,
-				C9DAB1F82155D52100E34F8C /* main.cpp in Sources */,
+				C99EA44221BCB6930039CA62 /* cpu.cpp in Sources */,
+				C99EA43C21BCB0F60039CA62 /* tone.cpp in Sources */,
+				C99EA42721BCA78F0039CA62 /* definitions.cpp in Sources */,
+				C99EA42A21BCA9A70039CA62 /* registers.cpp in Sources */,
+				C99EA44821BCBC090039CA62 /* main.cpp in Sources */,
+				C99EA43F21BCB3270039CA62 /* mmu.cpp in Sources */,
+				C99EA43321BCAE440039CA62 /* sprite.cpp in Sources */,
+				C99EA42D21BCAC450039CA62 /* joypad.cpp in Sources */,
+				C99EA42421BCA6200039CA62 /* debug.cpp in Sources */,
+				C99EA43921BCB0D50039CA62 /* apu.cpp in Sources */,
+				C99EA43021BCAD960039CA62 /* bitOperations.cpp in Sources */,
+				C99EA43621BCAFDC0039CA62 /* timer.cpp in Sources */,
+				C99EA44521BCB9A30039CA62 /* ppu.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
