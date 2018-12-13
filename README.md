@@ -1,6 +1,6 @@
 # GB-C-Emulator
 
-A Gameboy Emulator project I made for learning (educational) purposes. You can run it by compiling the project using xcode (to link SDL2) and adding the rom name as an argument.
+A Gameboy Emulator project I made for learning (educational) purposes. You can run it by compiling the project using xcode (to link SDL2) and adding the rom name as an argument. Note there is currently a bug on macOS SDL2 that causes the screen to be black at first. If you drag it around a bit the screen should load.
 
 Here are some pictures:
 <p align="center">
